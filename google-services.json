@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "328982535563",
+    "project_id": "jit-connect-3f971",
+    "storage_bucket": "jit-connect-3f971.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:328982535563:android:092cb0d7f65e410851238e",
+        "android_client_info": {
+          "package_name": "com.jit.jitconnect"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwlAjOLGlnQqL8x6dOOBvHHugzXjTmctU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
