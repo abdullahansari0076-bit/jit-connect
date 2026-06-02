@@ -1,0 +1,142 @@
+// ═══════════════════════════════════════════════════════════════
+// FILE: firestore.rules
+// ═══════════════════════════════════════════════════════════════
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Helpers ──────────────────────────────────────────────────
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    function isHOD() {
+      return isSignedIn() &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'hod';
+    }
+    function isTeacher() {
+      return isSignedIn() &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'teacher';
+    }
+    function isStudent() {
+      return isSignedIn() &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'student';
+    }
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    // ── users ─────────────────────────────────────────────────────
+    match /users/{uid} {
+      allow read: if isOwner(uid) || isHOD() || isTeacher();
+      allow create: if isHOD();
+      allow update: if isOwner(uid) || isHOD();
+      allow delete: if isHOD();
+    }
+
+    // ── courses ───────────────────────────────────────────────────
+    match /courses/{courseId} {
+      allow read: if isSignedIn();
+      allow write: if isHOD();
+    }
+
+    // ── subjects ──────────────────────────────────────────────────
+    match /subjects/{subjectId} {
+      allow read: if isSignedIn();
+      allow write: if isHOD();
+    }
+
+    // ── students ──────────────────────────────────────────────────
+    match /students/{studentId} {
+      allow read: if isOwner(studentId) || isTeacher() || isHOD();
+      allow create: if isHOD();
+      allow update: if isHOD();
+      allow delete: if isHOD();
+    }
+
+    // ── teachers ──────────────────────────────────────────────────
+    match /teachers/{teacherId} {
+      allow read: if isSignedIn();
+      allow create: if isHOD();
+      allow update: if isOwner(teacherId) || isHOD();
+      allow delete: if isHOD();
+    }
+
+    // ── timetable ─────────────────────────────────────────────────
+    match /timetable/{slotId} {
+      allow read: if isSignedIn();
+      allow write: if isHOD();
+    }
+
+    match /timetable_uploads/{courseId} {
+      allow read: if isSignedIn();
+      allow write: if isHOD();
+    }
+
+    // ── attendance ────────────────────────────────────────────────
+    match /attendance/{sessionId} {
+      // HOD and teacher read sessions
+      allow read: if isHOD() || isTeacher();
+
+      // Teacher can create session for their own slot only
+      allow create: if isTeacher() &&
+        request.resource.data.teacherId == request.auth.uid;
+
+      // Teacher can update only their own open sessions
+      allow update: if isTeacher() &&
+        resource.data.teacherId == request.auth.uid &&
+        resource.data.status == 'open';
+
+      // HOD can update for corrections
+      allow update: if isHOD();
+
+      // No deletes ever
+      allow delete: if false;
+
+      // ── attendance/records subcollection ──────────────────────
+      match /records/{studentId} {
+        // Teacher who owns session can write
+        allow write: if isTeacher() &&
+          get(/databases/$(database)/documents/attendance/$(sessionId)).data.teacherId
+            == request.auth.uid;
+
+        // Student reads only their own record
+        allow read: if isOwner(studentId) || isTeacher() || isHOD();
+      }
+    }
+
+    // ── extra_classes ─────────────────────────────────────────────
+    match /extra_classes/{requestId} {
+      allow read: if isTeacher() || isHOD();
+
+      // Any teacher can request
+      allow create: if isTeacher() &&
+        request.resource.data.requestedBy == request.auth.uid;
+
+      // Original teacher approves/rejects; HOD can do anything
+      allow update: if isHOD() ||
+        (isTeacher() &&
+          resource.data.originalTeacherId == request.auth.uid);
+
+      allow delete: if isHOD();
+    }
+
+    // ── notifications ─────────────────────────────────────────────
+    match /notifications/{notifId} {
+      // Users read own notifications only
+      allow read: if resource.data.recipientId == request.auth.uid || isHOD();
+
+      // Only Cloud Functions write (via Admin SDK — bypasses rules)
+      // Client can update isRead
+      allow update: if resource.data.recipientId == request.auth.uid &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['isRead']);
+
+      allow create: if isHOD(); // HOD can broadcast
+      allow delete: if isHOD();
+    }
+
+    // ── reminder_log (internal, no client access) ─────────────────
+    match /reminder_log/{logId} {
+      allow read, write: if false; // Cloud Functions Admin SDK only
+    }
+  }
+}
