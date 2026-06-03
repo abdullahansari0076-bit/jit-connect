@@ -1,0 +1,32 @@
+workflows:
+  android-release:
+    name: JIT Connect Android APK
+    max_build_duration: 60
+    environment:
+      flutter: stable
+      java: 17
+    scripts:
+      - name: Get Flutter packages
+        script: flutter pub get
+
+      - name: Place google-services.json
+        script: cp google-services.json android/app/google-services.json
+
+      - name: Create asset files
+        script: |
+          mkdir -p assets/sounds assets/images assets/icons
+          touch assets/sounds/class_bell.mp3
+
+      - name: Build release APK
+        script: flutter build apk --release --no-tree-shake-icons
+
+    artifacts:
+      - build/app/outputs/flutter-apk/app-release.apk
+
+    publishing:
+      email:
+        recipients:
+          - abdullahansari0076@gmail.com
+        notify:
+          success: true
+          failure: true
