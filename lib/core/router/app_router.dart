@@ -4,20 +4,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../data/models/app_models.dart';
 import '../../data/repositories/auth_repository.dart';
+
+// These files actually exist separately in your folders
 import '../../presentation/screens/auth/login_screen.dart';
-import '../../presentation/screens/auth/change_password_screen.dart';
-import '../../presentation/screens/hod/hod_dashboard_screen.dart';
-import '../../presentation/screens/hod/manage_courses_screen.dart';
-import '../../presentation/screens/hod/manage_students_screen.dart';
-import '../../presentation/screens/hod/manage_teachers_screen.dart';
-import '../../presentation/screens/hod/timetable_builder_screen.dart';
-import '../../presentation/screens/hod/reports_screen.dart';
 import '../../presentation/screens/teacher/teacher_dashboard_screen.dart';
 import '../../presentation/screens/teacher/mark_attendance_screen.dart';
-import '../../presentation/screens/teacher/extra_class_screen.dart';
 import '../../presentation/screens/student/student_dashboard_screen.dart';
-import '../../presentation/screens/shared/timetable_screen.dart';
-import '../../presentation/screens/shared/notifications_screen.dart';
+
+// This single import replaces all the missing screen errors!
+import '../../presentation/screens/all_screens.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   final userAsync = ref.watch(currentUserProvider);
