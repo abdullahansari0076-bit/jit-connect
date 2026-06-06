@@ -3,7 +3,7 @@ workflows:
     name: JIT Connect Android APK
     max_build_duration: 60
     environment:
-      flutter: stable
+      flutter: 3.22.0 # Locked version to prevent unexpected build breaks
       java: 17
     scripts:
       - name: Get Flutter packages
@@ -25,7 +25,6 @@ workflows:
         ignore_failure: false
 
       - name: Build release APK
-        # Added set -e to ensure script stops if any command fails
         script: |
           set -e
           flutter build apk --release --no-tree-shake-icons
