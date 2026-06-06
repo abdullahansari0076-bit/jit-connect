@@ -7,8 +7,8 @@ plugins {
 
 android {
     namespace "com.jit.jitconnect"
-    // REVERTED: Back to 34 to fix flutter_local_notifications compatibility
-    compileSdkVersion 34 
+    // BUMPED: Up to 36 to satisfy image_picker, url_launcher, etc.
+    compileSdkVersion 36 
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -31,7 +31,7 @@ android {
     defaultConfig {
         applicationId "com.jit.jitconnect"
         minSdkVersion 21
-        targetSdkVersion 34
+        targetSdkVersion 36
         versionCode flutter.versionCode
         versionName flutter.versionName
         multiDexEnabled true
