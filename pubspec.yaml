@@ -55,7 +55,7 @@ dev_dependencies:
 # This tells the generator which image to use
 flutter_launcher_icons:
   android: true
-  ios: true
+  ios: false
   image_path: "icon.png"
 
 flutter:
