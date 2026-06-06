@@ -9,6 +9,9 @@ workflows:
       - name: Get Flutter packages
         script: flutter pub get
 
+      - name: Generate App Icons
+        script: dart run flutter_launcher_icons
+
       - name: Place google-services.json
         script: cp google-services.json android/app/google-services.json
 
