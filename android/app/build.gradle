@@ -7,8 +7,8 @@ plugins {
 
 android {
     namespace "com.jit.jitconnect"
-    // BUMPED: from 34 to 36 to support updated plugins
-    compileSdkVersion 36 
+    // REVERTED: Back to 34 to fix flutter_local_notifications compatibility
+    compileSdkVersion 34 
     ndkVersion flutter.ndkVersion
 
     compileOptions {
