@@ -8,17 +8,7 @@ plugins {
 android {
     namespace "com.jit.jitconnect"
     compileSdkVersion 36 
-    ndkVersion "27.0.12077973" // Specified the required NDK version
-
-    // Define signingConfigs so that 'release' can find 'debug'
-    signingConfigs {
-        debug {
-            storeFile file('debug.keystore')
-            storePassword 'android'
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
-        }
-    }
+    ndkVersion "27.0.12077973"
 
     compileOptions {
         coreLibraryDesugaringEnabled true 
@@ -45,9 +35,10 @@ android {
 
     buildTypes {
         release {
-            signingConfig signingConfigs.debug
+            // Signing configuration removed to let Flutter handle it automatically
             minifyEnabled false
             shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }
