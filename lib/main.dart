@@ -9,19 +9,22 @@ import 'data/services/notification_service.dart';
 import 'firebase_options.dart';
 
 void main() async {
+  // 1. Ensure the Flutter engine is ready
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase safely
-  if (Firebase.apps.isEmpty) {
+  // 2. Fail-Safe Firebase Initialization
+  try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
+  } catch (e) {
+    debugPrint("Firebase initialization note: $e");
   }
 
-  // Initialize Services
+  // 3. Initialize Services
   await NotificationService().initialize();
 
-  // Configure UI
+  // 4. Configure UI
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: AppColors.primary,
     statusBarIconBrightness: Brightness.light,
@@ -32,6 +35,7 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
+  // 5. Run the app
   runApp(const ProviderScope(child: JITConnectApp()));
 }
 
