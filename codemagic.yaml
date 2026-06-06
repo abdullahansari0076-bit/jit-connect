@@ -8,20 +8,28 @@ workflows:
     scripts:
       - name: Get Flutter packages
         script: flutter pub get
+        ignore_failure: false
 
       - name: Generate App Icons
         script: dart run flutter_launcher_icons
+        ignore_failure: false
 
       - name: Place google-services.json
         script: cp google-services.json android/app/google-services.json
+        ignore_failure: false
 
       - name: Create asset files
         script: |
           mkdir -p assets/sounds assets/images assets/icons
           touch assets/sounds/class_bell.mp3
+        ignore_failure: false
 
       - name: Build release APK
-        script: flutter build apk --release --no-tree-shake-icons
+        # Added set -e to ensure script stops if any command fails
+        script: |
+          set -e
+          flutter build apk --release --no-tree-shake-icons
+        ignore_failure: false
 
     artifacts:
       - build/app/outputs/flutter-apk/app-release.apk
