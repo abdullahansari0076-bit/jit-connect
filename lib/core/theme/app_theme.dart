@@ -38,7 +38,6 @@ class AppTheme {
         primary: AppColors.primary,
         secondary: AppColors.primaryLight,
         surface: AppColors.card,
-        background: AppColors.surface,
       ),
       scaffoldBackgroundColor: AppColors.surface,
       textTheme: GoogleFonts.interTextTheme().copyWith(
@@ -67,15 +66,15 @@ class AppTheme {
         elevation: 0,
         type: BottomNavigationBarType.fixed,
       ),
-      // CHANGED: CardTheme is now CardThemeData
-      cardTheme: CardThemeData(
+      // FIXED: Corrected constructor name from CardThemeData to CardTheme
+      cardTheme: const CardTheme(
         color: AppColors.card,
         elevation: 0,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-          side: const BorderSide(color: AppColors.border, width: 0.5),
+          borderRadius: BorderRadius.all(Radius.circular(12)),
+          side: BorderSide(color: AppColors.border, width: 0.5),
         ),
-        margin: const EdgeInsets.only(bottom: 10),
+        margin: EdgeInsets.only(bottom: 10),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
