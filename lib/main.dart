@@ -9,44 +9,31 @@ import 'data/services/notification_service.dart';
 import 'firebase_options.dart';
 
 void main() async {
+  // 1. Ensure the Flutter engine is ready
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase safely
+  // 2. Initialize Firebase ONLY if it hasn't been initialized yet
+  // We check if Firebase.apps is empty (meaning no app is currently initialized)
   if (Firebase.apps.isEmpty) {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
   }
 
-  // Notifications + buzzer
+  // 3. Initialize other services
   await NotificationService().initialize();
 
-  // Status bar style
+  // 4. Configure System UI
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: AppColors.primary,
     statusBarIconBrightness: Brightness.light,
   ));
 
-  // Portrait only
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
 
+  // 5. Run the app
   runApp(const ProviderScope(child: JITConnectApp()));
-}
-
-class JITConnectApp extends ConsumerWidget {
-  const JITConnectApp({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final router = ref.watch(routerProvider);
-    return MaterialApp.router(
-      title: 'JIT Connect',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      routerConfig: router,
-    );
-  }
 }
