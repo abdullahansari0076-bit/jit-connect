@@ -7,20 +7,16 @@ plugins {
 
 android {
     namespace "com.jit.jitconnect"
-    // BUMPED: Up to 36 to satisfy image_picker, url_launcher, etc.
     compileSdkVersion 36 
     ndkVersion flutter.ndkVersion
 
     compileOptions {
-        // ADDED: Required for flutter_local_notifications on older devices
         coreLibraryDesugaringEnabled true 
-        // Updated to Java 17
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        // Updated to Java 17
         jvmTarget = "17"
     }
 
@@ -32,13 +28,17 @@ android {
         applicationId "com.jit.jitconnect"
         minSdkVersion 21
         targetSdkVersion 36
-        versionCode flutter.versionCode
-        versionName flutter.versionName
+        
+        // Corrected versioning to remove dependency on deprecated properties
+        versionCode 1
+        versionName "1.0.0"
+        
         multiDexEnabled true
     }
 
     buildTypes {
         release {
+            // Using the debug signing config for now to ensure it builds
             signingConfig signingConfigs.debug
             minifyEnabled false
             shrinkResources false
@@ -51,8 +51,6 @@ flutter {
 }
 
 dependencies {
-    // ADDED: Core desugaring library
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.1.3" 
-    // Removed the hardcoded Kotlin 1.7.10 dependency to prevent version clashes
     implementation "androidx.multidex:multidex:2.0.1"
 }
