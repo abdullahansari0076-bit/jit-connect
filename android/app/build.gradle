@@ -8,7 +8,17 @@ plugins {
 android {
     namespace "com.jit.jitconnect"
     compileSdkVersion 36 
-    ndkVersion flutter.ndkVersion
+    ndkVersion "27.0.12077973" // Specified the required NDK version
+
+    // Define signingConfigs so that 'release' can find 'debug'
+    signingConfigs {
+        debug {
+            storeFile file('debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
+    }
 
     compileOptions {
         coreLibraryDesugaringEnabled true 
@@ -28,17 +38,13 @@ android {
         applicationId "com.jit.jitconnect"
         minSdkVersion 21
         targetSdkVersion 36
-        
-        // Corrected versioning to remove dependency on deprecated properties
         versionCode 1
         versionName "1.0.0"
-        
         multiDexEnabled true
     }
 
     buildTypes {
         release {
-            // Using the debug signing config for now to ensure it builds
             signingConfig signingConfigs.debug
             minifyEnabled false
             shrinkResources false
