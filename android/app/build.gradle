@@ -28,14 +28,19 @@ android {
         applicationId "com.jit.jitconnect"
         minSdkVersion 21
         targetSdkVersion 36
-        versionCode 1
-        versionName "1.0.0"
+        
+        // BUMPED: Incremented to 2 to force Android devices to recognize this as a fresh update
+        versionCode 2
+        versionName "1.0.1"
+        
         multiDexEnabled true
     }
 
     buildTypes {
         release {
-            // Signing configuration removed to let Flutter handle it automatically
+            // FIXED: Explicitly forces the build to sign itself with a standard config 
+            // so it can be installed by clicking the file on your device.
+            signingConfig signingConfigs.debug
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
